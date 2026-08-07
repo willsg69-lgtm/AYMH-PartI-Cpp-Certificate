@@ -1,0 +1,41 @@
+cff-version: 1.2.0
+title: "AYMH Part I C++ Numerical Certificate"
+message: "If you use this code package, please cite the accompanying AYMH Part I paper and this repository."
+type: software
+license: MIT
+authors:
+  - family-names: "Lührmann"
+    given-names: "Jonas"
+  - family-names: "Palacios"
+    given-names: "José M."
+  - family-names: "Pusateri"
+    given-names: "Fabio"
+  - family-names: "Schlag"
+    given-names: "Wilhelm"
+  - family-names: "Shahshahani"
+    given-names: "Sohrab"
+url: "https://github.com/willsg69-lgtm/AYMH-PartI-Cpp-Certificate"
+repository-code: "https://github.com/willsg69-lgtm/AYMH-PartI-Cpp-Certificate"
+abstract: "CAPD multiprecision interval-arithmetic certificate for the vortex shooting parameter, scalar spectral estimates, internal eigenvalue, threshold nonresonance, and Fermi Golden Rule calculation in Part I of the AYMH degree-one vortex stability project."
+keywords:
+  - "computer-assisted proof"
+  - "interval arithmetic"
+  - "CAPD"
+  - "Yang-Mills-Higgs equations"
+  - "spectral theory"
+preferred-citation:
+  type: article
+  title: "Asymptotic stability of the degree-one vortex in the abelian Yang-Mills-Higgs model: Spectral Theory and Numerics"
+  authors:
+    - family-names: "Lührmann"
+      given-names: "Jonas"
+    - family-names: "Palacios"
+      given-names: "José M."
+    - family-names: "Pusateri"
+      given-names: "Fabio"
+    - family-names: "Schlag"
+      given-names: "Wilhelm"
+    - family-names: "Shahshahani"
+      given-names: "Sohrab"
+  year: 2026
+  url: "https://arxiv.org/abs/YYMM.NNNNN"

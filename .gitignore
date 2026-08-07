@@ -1,0 +1,17 @@
+.DS_Store
+*.o
+*.out
+*.log
+*.aux
+*.bcf
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.run.xml
+*.toc
+*.synctex.gz
+capd_cpp/lppssi_cert_v6_mp
+capd_cpp/capd_build_v6_mp_local_*.txt
+capd_cpp/capd_certificate_v6_220bit_local_*.txt
+paper/LPPSS1_PartI.pdf
