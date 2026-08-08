@@ -1456,6 +1456,46 @@ static Vec initialVortexVar(const Settings& S, const I& c) {
   return x;
 }
 
+static bool checkVortexOriginStartBoxes(const Settings& S) {
+  I paperR0 = IV("0.1");
+  I paperJ0 = IV("0.6032878545810", "0.6032878545819");
+  requireTrue(containsInterval(S.r0, paperR0),
+              "active r0 contains the exact Lemma lem:I0 radius 0.1");
+  requireTrue(containsInterval(S.c_box, paperJ0),
+              "active c_box contains the exact Lemma lem:I0 interval J0");
+
+  std::cout << "\n[0b] Vortex starting boxes at r=0.1 "
+               "(Lemma 4.4, lem:I0)\n";
+  std::cout << "  J0=[0.6032878545810,0.6032878545819]\n"
+               "  target U box=[0.0602534900425221,0.0602534900426123]\n"
+               "  target a box=[0.00249545811721475,0.00249545811721477]\n";
+  Vec ordinary = initialVortex(S, S.c_box);
+  Vec variational = initialVortexVar(S, S.c_box);
+
+  bool ordinaryOk =
+      subsetOfDecimalInterval(
+          ordinary[1], "0.0602534900425221", "0.0602534900426123")
+      && subsetOfDecimalInterval(
+          ordinary[2], "0.00249545811721475", "0.00249545811721477");
+  bool variationalOk =
+      subsetOfDecimalInterval(
+          variational[1], "0.0602534900425221", "0.0602534900426123")
+      && subsetOfDecimalInterval(
+          variational[2], "0.00249545811721475", "0.00249545811721477");
+
+  std::cout << "  ordinary initializer: U=" << ordinary[1]
+            << ", a=" << ordinary[2] << "\n";
+  std::cout << "  variational initializer: U=" << variational[1]
+            << ", a=" << variational[2] << "\n";
+  std::cout << "  both initializers lie in the boxes stated in Lemma lem:I0: "
+            << pass(ordinaryOk && variationalOk) << "\n";
+  requireTrue(ordinaryOk,
+              "ordinary vortex initializer lies in the Lemma lem:I0 box");
+  requireTrue(variationalOk,
+              "variational vortex initializer lies in the Lemma lem:I0 box");
+  return true;
+}
+
 // -----------------------------------------------------------------------------
 // Bessel-K0/K1 rigorous bounds from the integral representation
 //
@@ -2071,8 +2111,10 @@ static OutgoingStart outgoingDataAtR(const Settings& S, int which, const I& k) {
   I derErr = (k * zErr + zPrimeErr) / isqrt(k);
 
   // Uniform upper bound for the matrix Weyl functions used in the FGR source
-  // bound.  Lemma 4.6 gives |1-a| <= (33/8) exp(-R) sqrt(R) for r>=R,
-  // hence |b|=|1-a|/r <= (33/8) exp(-R)/sqrt(R).  Then
+  // bound.  For r>=R=16, the proof of Lemma lem:capd_outgoing_start (using
+  // Corollary cor:vortex_tail_bridge and integration of a') gives
+  // |1-a(r)| <= (33/8) exp(-r) sqrt(r), hence uniformly
+  // |b(r)|=|1-a(r)|/r <= (33/8) exp(-R)/sqrt(R).  Then
   // | -y' - y/(2r) - b y | and |U y| are bounded by the following quantity.
   I zTotal = zSup + zErr;
   I zPrimeTotal = zPrimeSup + zPrimeErr;
@@ -2899,9 +2941,9 @@ static bool checkFGR(
                   && upperLess(originNorm2Bound, originBUpper)
                   && upperLess(tailB, "3.174707028e-10")
                   && upperLess(tailB, "1e-9");
-  bool finalOk = lowerGreater(F1low, "0.008312713")
-              && lowerGreater(F2low, "0.031336270")
-              && lowerGreater(F12low, "0.012345959");
+  bool finalOk = lowerGreater(F1low, "0.017297889")
+              && lowerGreater(F2low, "0.047248801")
+              && lowerGreater(F12low, "0.022940050");
   bool ok = compactOk && remainderOk && finalOk;
   std::cout << pass(ok) << "\n";
   return ok;
@@ -2967,6 +3009,9 @@ int main() {
     };
 
     requireCheck("0 directed decimal inputs", [&]() { return checkDecimalInputEnclosures(); });
+    requireCheck("0b vortex origin start boxes", [&]() {
+      return checkVortexOriginStartBoxes(S);
+    });
     requireCheck("1 vortex shooting", [&]() { return checkVortexBracket(S); });
     requireCheck("2 H1 positivity", [&]() { return checkH1(S); });
     requireCheck("3 Seto logarithmic-kernel bound", [&]() { return checkLT(S); });

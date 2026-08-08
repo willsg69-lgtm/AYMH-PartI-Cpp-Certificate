@@ -1,4 +1,4 @@
-certificate source SHA-256 = c26bf5d814559947a55406a560dd28c95223a78b2c8d6c20ed79f55fec75f90f
+certificate source SHA-256 = 4a6ff8f4fdf2962ea092c30c167e1405c5014987c7f837b4b0aee5c684d789d1
 CAPD version = 5.3.0
 compiler = g++ (GCC) 12.2.0
 LPPSSI C++ CAPD numerical certificate
@@ -14,6 +14,14 @@ all earlier prerequisite blocks in this same run have PASSed.
 [0] Directed decimal input check
 Representative proof-relevant decimal literals are enclosed by directed parsing.
 PASS
+
+[0b] Vortex starting boxes at r=0.1 (Lemma 4.4, lem:I0)
+  J0=[0.6032878545810,0.6032878545819]
+  target U box=[0.0602534900425221,0.0602534900426123]
+  target a box=[0.00249545811721475,0.00249545811721477]
+  ordinary initializer: U=[6.02534900425221156984854315451e-2 ,6.02534900426122285766418716324e-2 ], a=[2.49545811721475232401762170871e-3 ,2.49545811721476592066983429900e-3 ]
+  variational initializer: U=[6.02534900425221156984854315451e-2 ,6.02534900426122285766418716324e-2 ], a=[2.49545811721475232401762170871e-3 ,2.49545811721476592066983429900e-3 ]
+  both initializers lie in the boxes stated in Lemma lem:I0: PASS
 
 [1] Vortex shooting interval coded lemma
 J0 = [6.03287854580999999999999999999e-1 ,6.03287854581900000000000000001e-1 ]
