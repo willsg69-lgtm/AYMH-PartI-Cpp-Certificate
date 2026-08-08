@@ -2637,14 +2637,16 @@ static I lowerNorm2Sum(const CI& z1, const CI& z2) {
   return I(lower.leftBound(), upper.rightBound());
 }
 
-static I fgrOriginRawComponentBound(const Settings& S, const CI& iOverA1, const CI& iOverA2) {
-  // Coded origin lemma for [0,0.1].  It deliberately avoids using the singular
-  // point in the algebraic dFT formulas.  On this short interval we use:
-  //   U <= r, |U'| <= 1, |psi| <= (1-r^2/4)^(-1), |psi'| <= M r/2,
-  //   |Phi_1 terms| <= harmless powers of r, and
-  //   |-Phi_2' + Phi_2/(2r)| <= 3 r^(-1/2).
-  // The last bound ignores the leading cancellation, so it is crude but safe.
-  // It bounds each raw Aij component before the final paper normalization.
+static I fgrOriginComponentBound(const Settings& S, const CI& iOverA1, const CI& iOverA2) {
+  // Numerical checks for the analytic origin estimate in Lemma 7.3.  No ODE
+  // integration or quadrature is performed on [0,0.1].  The proof uses
+  //   U <= r, |U'| <= 1, |psi_0| <= (1-r^2/4)^(-1),
+  //   |psi_0'| <= M r/2,
+  // together with the regular-column bounds
+  //   |column 1, entry 1|+|column 1, entry 2| < 5 r^(3/2),
+  //   |column 2, entry 1|+|column 2, entry 2| < 4 r^(3/2).
+  // We use 5 r^(3/2) for both columns.  After multiplication by sqrt(r),
+  // its integral over [0,R0] is 5 R0^3/3.
   I R0 = S.r0;
   I G1bound = one() / (one() - IV("5") * sqr(R0) / IV("12"));
   I G2bound = one() / (one() - sqr(R0));
@@ -2652,6 +2654,13 @@ static I fgrOriginRawComponentBound(const Settings& S, const CI& iOverA1, const 
               "origin Frobenius bound G_1(0.1) < 1.005");
   requireTrue(upperLess(G2bound, "1.011"),
               "origin Frobenius bound G_2(0.1) < 1.011");
+  I upi1Constant =
+      (IV("4") + IV("11") * sqr(R0) / IV("6")) * G1bound;
+  I upi2Constant = IV("3") * G2bound;
+  requireTrue(upperLess(upi1Constant, "5"),
+              "origin regular-column 1 constant < 5");
+  requireTrue(upperLess(upi2Constant, "4"),
+              "origin regular-column 2 constant < 4");
   I rho = sqr(R0) / IV("4");
   I psiM = one() / (one() - rho);
   I dpsiM = psiM * R0 / two();
@@ -2672,16 +2681,14 @@ static I fgrOriginRawComponentBound(const Settings& S, const CI& iOverA1, const 
   qM = maxUpperInterval(qM, q12c2);
 
   I invM = maxUpperInterval(absUpper(iOverA1), absUpper(iOverA2));
-  I rawE22Integral = IV("3") * invM * R0; // ∫_0^R r^{-1/2} sqrt(r) dr = R
-  I componentBound = qM * rawE22Integral;
+  I regularColumnIntegral = IV("5") * invM * ipow(R0, 3) / IV("3");
+  I componentBound = qM * regularColumnIntegral;
   requireTrue(upperLess(qM, "0.201757527"),
               "FGR origin source bound < 0.201757527");
   requireTrue(upperLess(invM, "2.506371585"),
               "FGR inverse-Wronskian bound < 2.506371585");
-  requireTrue(upperLess(componentBound, "0.151703800"),
-              "FGR origin integral component bound < 0.151703800");
-  requireTrue(upperLess(componentBound, "0.151708"),
-              "FGR origin integral component bound < B0");
+  requireTrue(upperLess(componentBound, "8.43e-4"),
+              "FGR origin integral component bound < 8.43e-4");
   std::cout << "FGR origin integral component bound on [0,0.1] = "
             << componentBound << "\n";
   std::cout << "  q-origin bound = " << qM << ", inverse-Wronskian bound = " << invM << "\n";
@@ -2800,12 +2807,12 @@ static bool checkFGR(
   fgrSourceConstantCheck(S, weylTailEnvelope);
   CI iOverA1 = mulI(inv(a1));
   CI iOverA2 = mulI(inv(a2));
-  I originComponentBound = fgrOriginRawComponentBound(S, iOverA1, iOverA2);
+  I originComponentBound = fgrOriginComponentBound(S, iOverA1, iOverA2);
 
   FgrSums sums;
 
   // Compact [0.1,16] by CAPD tubes.  The omitted origin contribution [0,0.1]
-  // is handled by fgrOriginRawComponentBound and subtracted from the final
+  // is handled by fgrOriginComponentBound and subtracted from the final
   // norm lower bounds.
   Vec x = y0;
   I hc = (S.r_fgr - S.r0) / IV(std::to_string(S.fgr_cells).c_str());
@@ -2841,8 +2848,13 @@ static bool checkFGR(
   I F2 = Ffactor * S2;
   I F12 = Ffactor * S12;
   I tailB = fgrTailSquaredBound(S);
-  I originRawNorm = isqrt(two()) * originComponentBound;
-  I originB = Ffactor * sqr(originRawNorm);
+  I originNorm2Bound = two() * sqr(originComponentBound);
+  const char* originBUpper = "1.5e-6";
+  I originB = IV("0", originBUpper);
+  requireTrue(upperLess(Ffactor, "1"),
+              "c(mu) < 1 on Lambda_FGR");
+  requireTrue(upperLess(originNorm2Bound, originBUpper),
+              "Lemma 7.3 origin contribution < B_origin");
 
   auto lowerAfterTail = [&](const I& F) -> I {
     R fl = F.leftBound();
@@ -2865,7 +2877,9 @@ static bool checkFGR(
   printWidth("hat D_2,[0.1,16]^(0) interval", F2);
   printWidth("hat D_12,[0.1,16]^(0) interval", F12);
   std::cout << "c(mu) = k/(64*mu^2) = " << Ffactor << "\n";
-  std::cout << "B_origin = " << originB << "\n";
+  std::cout << "2*(origin component bound)^2 <= " << originNorm2Bound << "\n";
+  std::cout << "B_origin from Lemma 7.3 used in the final estimate = "
+            << originB << "\n";
   std::cout << "B_tail = " << tailB << "\n";
   std::cout << "The vector integrals over (0,0.1), [0.1,16], and (16,infinity)\n"
                "  are combined by the triangle inequality before the\n"
@@ -2880,9 +2894,9 @@ static bool checkFGR(
                        F2, "0.0477905323094", "0.0546253884722")
                 && strictSubsetOfDecimalInterval(
                        F12, "0.0233179905311", "0.0287364386010");
-  bool remainderOk = upperLess(originComponentBound, "0.151708")
-                  && upperLess(originB, "1.728239729e-3")
-                  && upperLess(originB, "1.72834e-3")
+  bool remainderOk = upperLess(originComponentBound, "8.43e-4")
+                  && upperLess(Ffactor, "1")
+                  && upperLess(originNorm2Bound, originBUpper)
                   && upperLess(tailB, "3.174707028e-10")
                   && upperLess(tailB, "1e-9");
   bool finalOk = lowerGreater(F1low, "0.008312713")
