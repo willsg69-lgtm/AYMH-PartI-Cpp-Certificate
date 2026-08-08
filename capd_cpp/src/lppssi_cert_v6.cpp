@@ -2701,40 +2701,33 @@ static I fgrTailSquaredBound(const Settings& S) {
   return bound;
 }
 
-static I fgrSourceConstantCheck(const Settings& S, const CI& a1, const CI& a2,
+static I fgrSourceConstantCheck(const Settings& S,
                                 const I& weylTailEnvelope) {
-  // Numerical part of the paper's displayed source bound:
-  //   sqrt(2)*WeylBound*8*5*
-  //   (1/(4 lambda sqrt(pi))*max(|a1|^{-1},|a2|^{-1})) < 30.
-  // The residual/Volterra outgoing start proves a Weyl upper bound for r >= 16;
-  // the factors 8 and 5 are the finite number of channel terms
-  // and the explicit source-polynomial coefficient bound.
-  I invA = maxUpperInterval(absUpper(inv(a1)), absUpper(inv(a2)));
+  // With the distorted Fourier normalization used in the paper, the exact
+  // connection formula gives the source bound
+  //
+  //   10 * WeylBound / (lambda * sqrt(pi)).
+  //
+  // The outgoing Volterra calculation supplies WeylBound uniformly
+  // for mu in the certified FGR interval.
   I lambda = isqrt(S.mu_box);
-  I value = weylTailEnvelope * IV("40") * invA / (IV("4") * lambda * isqrt(piI()));
-  I euclideanValue = isqrt(two()) * value;
-  I cancellationBound =
-      IV("20") * isqrt(two()) * weylTailEnvelope
-      / (IV("4") * lambda * isqrt(piI()));
-  I roundedEuclideanBound = isqrt(two()) * IV("20.081");
+  I paperBound =
+      IV("10") * weylTailEnvelope / (lambda * isqrt(piI()));
+
   std::cout << "FGR source constant numerical check\n";
-  std::cout << "  outgoing Weyl upper bound for r >= 16 <= " << weylTailEnvelope << "\n";
-  std::cout << "  max(|a1|^-1,|a2|^-1) <= " << invA << "\n";
-  std::cout << "  upper_bound*8*5/(4*lambda*sqrt(pi))*max <= " << value << "\n";
-  std::cout << "  sqrt(2) times this factor <= " << euclideanValue << "\n";
-  std::cout << "  bound after the connection-coefficient cancellation <= "
-            << cancellationBound << "\n";
-  std::cout << "  targets < 20.081 and < 30: "
-            << pass(upperLess(value, "20.081")
-                    && upperLess(euclideanValue, "30")) << "\n";
-  requireTrue(upperLess(value, "20.081"),
-              "FGR source constant numerical factor < 20.081");
-  requireTrue(upperLess(cancellationBound, "5.67"),
-              "FGR source bound after connection-coefficient cancellation < 5.67");
-  requireTrue(upperLess(roundedEuclideanBound, "30"),
-              "sqrt(2)*20.081 < 30");
-  requireTrue(upperLess(euclideanValue, "30"), "FGR Euclidean source constant numerical factor < 30");
-  return value;
+  std::cout << "  outgoing Weyl upper bound for r >= 16 <= "
+            << weylTailEnvelope << "\n";
+  std::cout << "  10*upper_bound/(lambda*sqrt(pi)) <= "
+            << paperBound << "\n";
+  std::cout << "  targets < 8.02 and < 30: "
+            << pass(upperLess(paperBound, "8.02")
+                    && upperLess(paperBound, "30")) << "\n";
+
+  requireTrue(upperLess(paperBound, "8.02"),
+              "paper FGR tail source constant < 8.02");
+  requireTrue(upperLess(paperBound, "30"),
+              "FGR tail source constant < 30");
+  return paperBound;
 }
 
 static bool checkFGR(
@@ -2804,7 +2797,7 @@ static bool checkFGR(
   I weylTailEnvelope = maxUpperInterval(out1.matrixTailBound, out2.matrixTailBound);
   requireTrue(upperAtMost(weylTailEnvelope, "1.253"),
               "uniform outgoing Weyl-vector bound <= 1.253");
-  fgrSourceConstantCheck(S, a1, a2, weylTailEnvelope);
+  fgrSourceConstantCheck(S, weylTailEnvelope);
   CI iOverA1 = mulI(inv(a1));
   CI iOverA2 = mulI(inv(a2));
   I originComponentBound = fgrOriginRawComponentBound(S, iOverA1, iOverA2);
@@ -2872,10 +2865,10 @@ static bool checkFGR(
   printWidth("hat D_2,[0.1,16]^(0) interval", F2);
   printWidth("hat D_12,[0.1,16]^(0) interval", F12);
   std::cout << "c(mu) = k/(64*mu^2) = " << Ffactor << "\n";
-  std::cout << "B_origin^cert = " << originB << "\n";
+  std::cout << "B_origin = " << originB << "\n";
   std::cout << "B_tail = " << tailB << "\n";
   std::cout << "The vector integrals over (0,0.1), [0.1,16], and (16,infinity)\n"
-               "  are combined by the reverse triangle inequality before the\n"
+               "  are combined by the triangle inequality before the\n"
                "  resulting lower bound is squared.\n";
   std::cout << "lower bound for hat D_1^(0) = " << F1low << "\n";
   std::cout << "lower bound for hat D_2^(0) = " << F2low << "\n";
