@@ -473,7 +473,7 @@ k_mu = sqrt(4 mu - 1),
 factor = k_mu/(64 mu^2).
 ```
 
-After applying the reverse triangle inequality to the compact, origin, and
+After applying the triangle inequality to the compact, origin, and
 large-radius vector integrals, and only then squaring, the transcript gives
 
 ```text
