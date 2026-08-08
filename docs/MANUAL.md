@@ -477,9 +477,9 @@ After applying the triangle inequality to the compact, origin, and
 large-radius vector integrals, and only then squaring, the transcript gives
 
 ```text
-hat D_1^(0)  > 0.008312713
-hat D_2^(0)  > 0.031336270
-hat D_12^(0) > 0.012345959
+hat D_1^(0)  > 0.017297889
+hat D_2^(0)  > 0.047248801
+hat D_12^(0) > 0.022940050
 ```
 
 These are the quantities formed with `psi_0(0)=1` and the factor

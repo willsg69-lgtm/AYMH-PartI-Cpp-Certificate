@@ -82,9 +82,9 @@ The principal checks are the following.
    bounded separately and combined with the compact integral before
    squaring.  The final certified lower bounds are
    ```text
-   hat D_1^(0)  > 0.008312713,
-   hat D_2^(0)  > 0.031336270,
-   hat D_12^(0) > 0.012345959.
+   hat D_1^(0)  > 0.017297889,
+   hat D_2^(0)  > 0.047248801,
+   hat D_12^(0) > 0.022940050.
    ```
    With the sign convention and normalization of the paper, these inequalities
    prove that the physical coefficients `D_1,D_2,D_12` are strictly negative.
