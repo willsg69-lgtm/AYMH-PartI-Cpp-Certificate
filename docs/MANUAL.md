@@ -300,9 +300,9 @@ does not produce a certificate.
 The paper reduces the required numerical input to a finite list of interval
 statements.  The C++ code certifies those statements in the following order.
 The transcript is plain text, so it writes `rho_0` and `varrho_0` for the
-paper's $\rho_0$ and $\boldsymbol{\varrho}_0$.  Its radius legend records
-$r_0=0.1$, $\rho_0=4$, $\boldsymbol{\varrho}_0=8.001$,
-$r_{\rm m}=10$, and $R=16$ at the beginning of every run.
+paper's ρ₀ and **ϱ₀**, respectively.  Its radius legend records
+r₀ = 0.1, ρ₀ = 4, **ϱ₀ = 8.001**, rₘ = 10, and R = 16 at the
+beginning of every run.
 
 ### Vortex shooting bracket
 
@@ -317,12 +317,12 @@ $a(27.75)>2$; at the upper endpoint it proves $U(31.6)>2$.  Together with the
 shooting dichotomy in Proposition 5.1, this gives the enclosure in
 Proposition 5.5.
 
-### Barrier check at $\rho_0=4$
+### Barrier check at ρ₀ = 4
 
-Using the broad interval $J_0$, the code checks the four finite-radius
-inequalities at $r=\rho_0=4$ required by Lemma 5.7.  Once these inequalities
+Using the broad interval J₀, the code checks the four finite-radius
+inequalities at r = ρ₀ = 4 required by Lemma 5.7.  Once these inequalities
 are certified, that lemma and Corollary 6.1 provide the global bounds for
-$r\geq\rho_0$.
+r ≥ ρ₀.
 
 ### Newton refinement of the shooting parameter
 
@@ -332,21 +332,21 @@ The code performs the interval Newton step in Lemma 5.9 for
 F_20(c) = U(20;c)-1.
 ```
 
-The transcript records the Newton image, the derivative lower bound for
-`partial_c U(20;c)` on `J_0`, the analytic bound for `1-U(20;c_*)`, and the
-resulting interval containing the true asymptotic shooting parameter.  The
-working interval used later is
+The transcript records the Newton image, the lower bound on the derivative of
+U(20;c) with respect to c on J₀, the analytic bound for the vortex tail at
+r = 20, and the resulting interval containing the true asymptotic shooting
+parameter.  The working interval used later is
 
 ```text
 I_cert = [0.6032878545816699, 0.6032878545816856].
 ```
 
-### Frobenius initial data at $r_0=0.1$
+### Frobenius initial data at r₀ = 0.1
 
 The code certifies the coefficient and series-tail estimates used to initialize:
 
 - the vortex profile;
-- the shooting derivatives $\partial_cU$ and $\partial_ca$;
+- the derivatives of U and a with respect to the shooting parameter c;
 - the origin-normalized internal mode $\psi_0$;
 - the solutions $\Phi_1$ and $\Phi_2$ determined by their behavior at the origin;
 - the threshold regular solution $\Phi_{2,0}^{(0)}$.
@@ -435,8 +435,8 @@ psi_0(r)       <= 1.4 K_0(kappa r),
 |psi_0'(r)|   <= 1.4 K_0(kappa r),
 ```
 
-Lemma 7.4 gives the first estimate for $r\geq\boldsymbol{\varrho}_0=8.001$,
-and Lemma 7.5 gives the derivative estimate for $r\geq R=16$.
+Lemma 7.4 gives the first estimate for r ≥ **ϱ₀ = 8.001**, and
+Lemma 7.5 gives the derivative estimate for r ≥ R = 16.
 
 ### Outgoing data at $R=16$
 

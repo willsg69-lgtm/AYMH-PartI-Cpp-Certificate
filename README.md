@@ -37,12 +37,12 @@ The principal checks are the following.
    ```text
    |c_* - 0.6032878545816779| < 7e-17.
    ```
-   The program also verifies at $\rho_0=4$ the finite inequalities from which the
+   The program also verifies at ρ₀ = 4 the finite inequalities from which the
    paper obtains the global vortex barriers.
 
 2. **Frobenius data at the origin.**  The regular series for the vortex, its
    shooting derivatives, the internal mode, the distorted Fourier basis, and
-   the regular threshold solution are bounded at $r_0=0.1$.  The program checks
+   the regular threshold solution are bounded at r₀ = 0.1.  The program checks
    finitely many coefficients and then verifies an all-order induction for the
    remaining coefficients.  It does not infer an infinite geometric tail from
    a finite list of observed coefficient ratios.
@@ -78,7 +78,7 @@ The principal checks are the following.
    outgoing data is controlled by the Volterra estimates proved in the paper.
 
 7. **Fermi Golden Rule.**  The radial integrals on
-   $[r_0,R]=[0.1,16]$ are evaluated by
+   [r₀,R] = [0.1,16] are evaluated by
    validated quadrature.  The omitted origin and large-radius pieces are
    bounded separately and combined with the compact integral before
    squaring.  The final certified lower bounds are
