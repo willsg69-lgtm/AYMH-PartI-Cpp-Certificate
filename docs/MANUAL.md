@@ -299,6 +299,10 @@ does not produce a certificate.
 
 The paper reduces the required numerical input to a finite list of interval
 statements.  The C++ code certifies those statements in the following order.
+The transcript is plain text, so it writes `rho_0` and `varrho_0` for the
+paper's $\rho_0$ and $\boldsymbol{\varrho}_0$.  Its radius legend records
+$r_0=0.1$, $\rho_0=4$, $\boldsymbol{\varrho}_0=8.001$,
+$r_{\rm m}=10$, and $R=16$ at the beginning of every run.
 
 ### Vortex shooting bracket
 
@@ -309,20 +313,20 @@ J_0 = [0.6032878545810, 0.6032878545819]
 ```
 
 is checked by endpoint shooting.  At the lower endpoint the code proves
-`a(27.75)>2`; at the upper endpoint it proves `U(31.6)>2`.  Together with the
-shooting dichotomy in Proposition `prop:exuniqUa`, this gives the enclosure in
-Proposition `prop:J0slope`.
+$a(27.75)>2$; at the upper endpoint it proves $U(31.6)>2$.  Together with the
+shooting dichotomy in Proposition 5.1, this gives the enclosure in
+Proposition 5.5.
 
-### Barrier check at r = 4
+### Barrier check at $\rho_0=4$
 
-Using the broad interval `J_0`, the code checks the four finite-radius
-inequalities at `r=4` required by Lemma `lem_1-U2`.  Once these inequalities
-are certified, that lemma and Corollary `cor:vortex_tail_bridge` provide the
-global bounds for `r>=4`.
+Using the broad interval $J_0$, the code checks the four finite-radius
+inequalities at $r=\rho_0=4$ required by Lemma 5.7.  Once these inequalities
+are certified, that lemma and Corollary 6.1 provide the global bounds for
+$r\geq\rho_0$.
 
 ### Newton refinement of the shooting parameter
 
-The code performs the interval Newton step in Lemma `lem:Newton` for
+The code performs the interval Newton step in Lemma 5.9 for
 
 ```text
 F_20(c) = U(20;c)-1.
@@ -337,19 +341,19 @@ working interval used later is
 I_cert = [0.6032878545816699, 0.6032878545816856].
 ```
 
-### Frobenius initial data at r = 0.1
+### Frobenius initial data at $r_0=0.1$
 
 The code certifies the coefficient and series-tail estimates used to initialize:
 
 - the vortex profile;
-- the shooting derivatives `partial_c U` and `partial_c a`;
-- the internal mode `psi`;
-- the solutions `Phi_1` and `Phi_2` determined by their behavior at the origin;
-- the threshold regular solution `Phi_{2,0}^{(0)}`.
+- the shooting derivatives $\partial_cU$ and $\partial_ca$;
+- the origin-normalized internal mode $\psi_0$;
+- the solutions $\Phi_1$ and $\Phi_2$ determined by their behavior at the origin;
+- the threshold regular solution $\Phi_{2,0}^{(0)}$.
 
-For `psi` the calculation retains coefficients through degree `M=100`; for
-each `Phi`-series it retains coefficients through degree `M=60`.  It computes
-and checks the next `K=20` coefficients with `rho=0.95`.  A separate all-order
+For $\psi_0$ the calculation retains coefficients through degree $M=100$; for
+each $\Phi$-series it retains coefficients through degree $M=60$.  It computes
+and checks the next $K=20$ coefficients with $\rho=0.95$.  A separate all-order
 induction estimate then proves that the full coefficient recurrence preserves
 the proposed geometric bound for every remaining index.  Only after this
 all-order estimate has passed are the resulting value and derivative tail
@@ -357,33 +361,36 @@ bounds used to initialize an ODE calculation.  The terminal coefficient ratios
 printed in the transcript are finite consistency checks; they are not
 extrapolated to justify an infinite geometric series.
 
-### Positivity of H_1
+The analytic remainder bounds are Lemma 5.3 for the vortex, Lemma 5.8 for its
+shooting derivatives, and Lemmas 7.1--7.2 for the spectral Frobenius series.
 
-On the compact interval needed by the scalar operator `H_1`, the code evaluates
+### Positivity of $\mathcal H_1$
+
+On the compact interval needed by the scalar operator $\mathcal H_1$, the code evaluates
 the potential and proves
 
 ```text
 V_1(r)-1 > 0.0548.
 ```
 
-This is the finite interval input used in Lemma `lem_appV1g1` to exclude bound
-states and a threshold resonance for `H_1`.
+This is the finite interval input used in Lemma 6.2 to exclude bound
+states and a threshold resonance for $\mathcal H_1$.
 
 ### Setô eigenvalue count
 
 The code evaluates the logarithmic-kernel integrals entering the estimate in
-Proposition `theoLT2` and certifies
+Proposition 6.4 and certifies
 
 ```text
 Lambda < 3.182292 < 3.2.
 ```
 
 Together with the counting theorem quoted in the paper, this gives at most one
-bound state for `L_2`.
+bound state for $\mathcal L_2$.
 
 ### Threshold nonresonance
 
-The code starts the regular threshold solution at `r=0.1`.  A Volterra estimate
+The code starts the regular threshold solution at $r=r_0=0.1$.  A Volterra estimate
 provides an interval containing the solution normalized at infinity and its
 derivative at the finite starting radius.  CAPD then carries both solutions to
 the matching radius, where the program computes their Wronskian.  The
@@ -393,19 +400,19 @@ transcript gives an interval contained in
 [-0.8003267, -0.8001801].
 ```
 
-Since this interval excludes zero, Lemma `Lemspec0` rules out a threshold
+Since this interval excludes zero, Lemma 6.3 rules out a threshold
 resonance.
 
-### Internal eigenvalue and Lambda_FGR
+### Internal eigenvalue and $\Lambda_{\rm FGR}$
 
-The broad Wronskian sign check in Lemma `lem:fgr_eigenvalue_box` gives an
+The broad Wronskian sign check in Lemma 7.3 gives an
 eigenvalue in
 
 ```text
 [0.77747, 0.77753].
 ```
 
-Using Proposition `theoLT2`, based on Setô's bound, this eigenvalue is unique.
+Using Proposition 6.4, based on Setô's bound, this eigenvalue is unique.
 The code then evaluates the Wronskian at directed intervals containing the
 exact endpoints of the sharper interval printed in the paper:
 
@@ -416,25 +423,25 @@ Lambda_FGR = [0.777471875, 0.77747375].
 The endpoint Wronskians have opposite strict signs.  An outward-rounded
 interval containing these exact decimal endpoints is then used for all later
 calculations.  Consequently, all subsequent spectral estimates hold uniformly
-for every `mu` in `Lambda_FGR` and hence at `mu=lambda^2`.
+for every $\mu$ in $\Lambda_{\rm FGR}$ and hence at $\mu=\lambda^2$.
 
-### K_0 comparison and derivative comparison for the internal mode
+### $K_0$ comparison and derivative comparison for the internal mode
 
-For `delta_0=0.0005` and `kappa=sqrt(1-delta_0-mu)`, the code checks the
+For $\delta_0=0.0005$ and $\kappa=\sqrt{1-\delta_0-\mu}$, the code checks the
 constants needed for
 
 ```text
-psi(r)       <= 1.4 K_0(kappa r),
-|psi'(r)|   <= 1.4 K_0(kappa r),
+psi_0(r)       <= 1.4 K_0(kappa r),
+|psi_0'(r)|   <= 1.4 K_0(kappa r),
 ```
 
-in the ranges stated in Lemmas `lem:psi_K0` and
-`lem:capd_psi_prime_tail`.
+Lemma 7.4 gives the first estimate for $r\geq\boldsymbol{\varrho}_0=8.001$,
+and Lemma 7.5 gives the derivative estimate for $r\geq R=16$.
 
-### Outgoing data at R = 16
+### Outgoing data at $R=16$
 
 The code constructs outgoing scalar data from the truncated asymptotic
-expansion at `R=16`, computes the exact error left by that truncation, and
+expansion at $R=16$, computes the exact error left by that truncation, and
 verifies the constants in a Volterra remainder estimate.  The analytic vortex
 tail controls the difference between the exact scalar equation and the limiting
 outgoing equation.
@@ -445,28 +452,27 @@ The transcript records the matrix Weyl upper bound
 W_infty <= 1.253.
 ```
 
-This is the bound proved in Lemma `lem:capd_outgoing_start` and used in the
+This is the bound proved in Lemma 8.1 and used in the
 FGR estimates.
 
 ### FGR source bound and final lower bounds
 
-The code evaluates the FGR integrals on `[0.1,16]` by interval quadrature.  The
-interval `(0,0.1)` is treated in Lemma `lem:capd_fgr_origin`, and
-`[16,infinity)` is treated in Lemma `lem:capd_fgr_tail_upper_bound` using the
+The code evaluates the FGR integrals on $[r_0,R]=[0.1,16]$ by interval
+quadrature.  The interval $(0,r_0)$ is treated in Lemma 8.3, and
+$[R,\infty)$ is treated in Lemma 8.2 using the
 Bessel comparison, derivative comparison, and outgoing-solution bound.
 For the compact calculation the program stores the complex conjugates of the
-two-vector integrals denoted by `A_ij` in the paper; their Euclidean norms are
+two-vector integrals denoted by $\mathcal A_{ij}$ in the paper; their Euclidean norms are
 identical. With the corrected distorted-Fourier normalization, the common
 scalar factor outside each radial vector integral on the shell is
-`1/(2 lambda sqrt(2 pi))`. The direct estimate in the paper gives a constant
+$1/(2\lambda\sqrt{2\pi})$. The direct estimate in the paper gives a constant
 smaller than `8.02`, and hence the convenient bound `30` remains valid. The
-exact prefactor of the tail contribution to `hat D_alpha^(0)` is
-`pi k_lambda/(8 lambda^2)`. The certificate estimates the larger expression
-with prefactor `pi k_lambda/(4 lambda^2)`, so its printed tail bound remains
+exact prefactor of the tail contribution to $\widehat D_\alpha^{(0)}$ is
+$\pi k_\lambda/(8\lambda^2)$. The certificate estimates the larger expression
+with prefactor $\pi k_\lambda/(4\lambda^2)$, so its printed tail bound remains
 rigorous and is slightly conservative.
 
-The code uses the `k`-shell factor described in Remark
-`rem:fgr_code_normalization` of the paper:
+The code uses the $k$-shell factor described in Remark 4.4 of the paper:
 
 ```text
 k_mu = sqrt(4 mu - 1),
@@ -482,16 +488,20 @@ hat D_2^(0)  > 0.047248801
 hat D_12^(0) > 0.022940050
 ```
 
-These are the quantities formed with `psi_0(0)=1` and the factor
-`k_mu/(64 mu^2)`.  In the notation of Proposition `prop:FGR1`,
+These are the quantities formed with $\psi_0(0)=1$ and the factor
+$k_\mu/(64\mu^2)$.  In the notation of Proposition 4.3,
 
-```text
-hat D_alpha^(0) = -(k_lambda/(4 lambda)) D_alpha^(0),
-D_alpha = -(4 lambda/(k_lambda nu_psi^4)) hat D_alpha^(0).
-```
+$$
+\begin{aligned}
+\widehat D_\alpha^{(0)}
+  &=-\frac{k_\lambda}{4\lambda}D_\alpha^{(0)},\\
+D_\alpha
+  &=-\frac{4\lambda}{k_\lambda\nu_\psi^4}\widehat D_\alpha^{(0)}.
+\end{aligned}
+$$
 
 The conversion factor is positive, so these three bounds prove the negativity
-of the physical coefficients `D_1,D_2,D_12`.
+of the physical coefficients $D_1,D_2,D_{12}$.
 
 ## Checking transcripts and file hashes
 

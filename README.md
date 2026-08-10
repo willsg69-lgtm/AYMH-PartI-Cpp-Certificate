@@ -37,18 +37,18 @@ The principal checks are the following.
    ```text
    |c_* - 0.6032878545816779| < 7e-17.
    ```
-   The program also verifies at `r=4` the finite inequalities from which the
+   The program also verifies at $\rho_0=4$ the finite inequalities from which the
    paper obtains the global vortex barriers.
 
 2. **Frobenius data at the origin.**  The regular series for the vortex, its
    shooting derivatives, the internal mode, the distorted Fourier basis, and
-   the regular threshold solution are bounded at `r=0.1`.  The program checks
+   the regular threshold solution are bounded at $r_0=0.1$.  The program checks
    finitely many coefficients and then verifies an all-order induction for the
    remaining coefficients.  It does not infer an infinite geometric tail from
    a finite list of observed coefficient ratios.
 
 3. **The first scalar channel.**  A validated enclosure of the potential gives
-   `V_1(r)-1>0.0548` on the compact interval required by the paper.  Together
+   $V_1(r)-1>0.0548$ on the compact interval required by the paper.  Together
    with the analytic argument there, this excludes bound states and a
    threshold resonance in this channel.
 
@@ -73,11 +73,12 @@ The principal checks are the following.
    ```
 
 6. **Large-radius estimates.**  The program verifies the finite inequalities
-   used in the comparison with `K_0`, bounds the derivative of the internal
-   mode, and constructs the outgoing solutions at `R=16`.  The error in the
+   used in the comparison with $K_0$, bounds the derivative of the internal
+   mode, and constructs the outgoing solutions at $R=16$.  The error in the
    outgoing data is controlled by the Volterra estimates proved in the paper.
 
-7. **Fermi Golden Rule.**  The radial integrals on `[0.1,16]` are evaluated by
+7. **Fermi Golden Rule.**  The radial integrals on
+   $[r_0,R]=[0.1,16]$ are evaluated by
    validated quadrature.  The omitted origin and large-radius pieces are
    bounded separately and combined with the compact integral before
    squaring.  The final certified lower bounds are
@@ -87,7 +88,7 @@ The principal checks are the following.
    hat D_12^(0) > 0.022940050.
    ```
    With the sign convention and normalization of the paper, these inequalities
-   prove that the physical coefficients `D_1,D_2,D_12` are strictly negative.
+   prove that the physical coefficients $D_1,D_2,D_{12}$ are strictly negative.
 
 The [manual](docs/MANUAL.md#paper-code-interface) identifies the corresponding
 paper results and explains precisely which part is proved analytically and
@@ -253,14 +254,18 @@ reviewed reference transcript.
 ## FGR normalization
 
 For completeness, the code uses the internal eigenfunction normalized by
-`psi_0(0)=1` and certifies positive auxiliary quantities
-`hat D_alpha^(0)`.  In the notation of the paper,
+$\psi_0(0)=1$ and certifies positive auxiliary quantities
+$\widehat D_\alpha^{(0)}$.  In the notation of the paper,
 
-```text
-hat D_alpha^(0) = -(k_lambda/(4 lambda)) D_alpha^(0),
-D_alpha = -(4 lambda/(k_lambda nu_psi^4)) hat D_alpha^(0),
-k_lambda = sqrt(4 lambda^2-1).
-```
+$$
+\begin{aligned}
+\widehat D_\alpha^{(0)}
+  &=-\frac{k_\lambda}{4\lambda}D_\alpha^{(0)},\\
+D_\alpha
+  &=-\frac{4\lambda}{k_\lambda\nu_\psi^4}\widehat D_\alpha^{(0)},\\
+k_\lambda&=\sqrt{4\lambda^2-1}.
+\end{aligned}
+$$
 
 All factors displayed apart from the minus signs are positive.  This is why
 the positive lower bounds printed by the program imply the negativity of the

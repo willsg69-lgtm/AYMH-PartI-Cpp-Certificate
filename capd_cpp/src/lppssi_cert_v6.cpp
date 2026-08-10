@@ -8,7 +8,7 @@
 // lemmas; it is not a proof of those analytic lemmas themselves.
 //
 // Connection with the Part I paper:
-//   * vortex shooting / J0 corresponds to the paper's vortex-profile interval;
+//   * vortex shooting / J_0 corresponds to the paper's vortex-profile interval;
 //   * H1 positivity corresponds to the compact numerical part of the V1-1
 //     positivity lemma;
 //   * the Seto logarithmic-kernel block supplies the certified one-bound-state
@@ -601,7 +601,7 @@ static I vortexATailBound(const I& r, int N) {
 }
 
 static I vortexDerivativeFactorTailBound(const I& r, int N) {
-  // Lemma Wbderror in the paper gives, for q=r^2/2,
+  // Lemma 5.8 in the paper gives, for q=r^2/2,
   //   sum_{n>N} 4 n q^n
   //     = 4 q^(N+1) ((N+1)-N q)/(1-q)^2.
   // This bounds the differentiated Frobenius factors for W and b.
@@ -614,7 +614,7 @@ static I vortexDerivativeFactorTailBound(const I& r, int N) {
 static I vortexUTangentTailBound(const I& r, int N) {
   // U(r,c)=c r W(r,c).  The first term below is the W-tail contribution from
   // differentiating the leading c factor; the second is c*r*partial_c W with
-  // c<=1/sqrt(2), as in Lemma Wbderror.
+  // c<=1/sqrt(2), as in Lemma 5.8.
   I q = sqr(r) / two();
   I wTail = ipow(q, static_cast<unsigned>(N + 1)) / (one() - q);
   I factorTail = vortexDerivativeFactorTailBound(r, N);
@@ -867,10 +867,10 @@ static PhiState phiEnergySeriesUsingCertifiedTail(
 }
 
 static void printVortexOriginTailCertificates(const Settings& S) {
-  std::cout << "origin vortex/tangent tail certificates at r0=" << S.r0 << "\n";
+  std::cout << "origin vortex/tangent tail certificates at r_0=" << S.r0 << "\n";
   int N = S.series_order + 20;
-  std::cout << "  U,a value tails use Lemma Wberror coefficient majorants.\n";
-  std::cout << "  U_c,a_c tangent tails use Lemma Wbderror derivative majorants.\n";
+  std::cout << "  U,a value tails use the coefficient majorants of Lemma 5.3.\n";
+  std::cout << "  U_c,a_c tangent tails use the derivative majorants of Lemma 5.8.\n";
   std::cout << "  differentiated factor tail E_N = "
             << vortexDerivativeFactorTailBound(S.r0, N) << " with N=" << N << "\n";
   std::cout << "  U_c value tail bound = " << vortexUTangentTailBound(S.r0, N) << "\n";
@@ -882,10 +882,10 @@ static void printSpectralOriginTailRadii(
     const InternalFrobeniusTailCertificate& psi,
     const PhiFrobeniusTailCertificate& phi1,
     const PhiFrobeniusTailCertificate& phi2) {
-  std::cout << "origin spectral Frobenius tail radii at r0=" << S.r0 << "\n";
+  std::cout << "origin spectral Frobenius tail radii at r_0=" << S.r0 << "\n";
   std::cout << "  These are the radii carried by the all-order invariant-ball\n"
                "  certificates used by the subsequent ODE calculations.\n";
-  std::cout << "  psi: M=" << psi.M << ", value tail=" << psi.valueTail
+  std::cout << "  psi_0: M=" << psi.M << ", value tail=" << psi.valueTail
             << ", x-derivative tail=" << psi.xDerivativeTail << "\n";
   std::cout << "  Phi_1: M=" << phi1.M << ", value tail=" << phi1.valueTail
             << ", x-derivative tail=" << phi1.xDerivativeTail << "\n";
@@ -1168,17 +1168,17 @@ static bool checkInternalModeTailBootstrapData(
   I muAbs = upperSingleton(absUpperAsInterval(muBox));
   std::vector<I> psiH = internalModeH(S.c_cert, muBox, S.series_order + 20 + slices);
   InfiniteTailMapRecord psi = checkInternalInfiniteTailSelfMap(
-      "psi " + label, psiH, x, cAbs, muAbs, S.series_order + 20, slices, "0.95");
+      "psi_0 " + label, psiH, x, cAbs, muAbs, S.series_order + 20, slices, "0.95");
   requireTrue(upperLess(psi.totalNorm, "0.358538353958974"),
-              "broad psi Frobenius beta <= 0.358538353958974");
+              "broad psi_0 Frobenius beta <= 0.358538353958974");
   requireTrue(upperLess(psi.valueTail, "2.74366499059244e-279"),
-              "broad psi Frobenius value tail bound");
+              "broad psi_0 Frobenius value tail bound");
   requireTrue(upperLess(psi.xDerivativeTail, "3.29239798871093e-275"),
-              "broad psi Frobenius x-derivative tail bound");
+              "broad psi_0 Frobenius x-derivative tail bound");
   requireTrue(upperLess(
                   two() * absUpperAsInterval(S.r0) * psi.xDerivativeTail,
                   "6.585e-276"),
-              "broad psi Frobenius radial-derivative tail bound");
+              "broad psi_0 Frobenius radial-derivative tail bound");
   certificate = {S.series_order + 20, S.r0, S.c_cert, muBox,
                  psi.valueTail, psi.xDerivativeTail};
   printInfiniteTailMapRecord(psi);
@@ -1215,17 +1215,17 @@ static bool checkFrobeniusTailBootstrapData(
     PhiFrobeniusTailCertificate& phi1Certificate,
     PhiFrobeniusTailCertificate& phi2Certificate) {
   std::cout << "origin Frobenius series-tail bootstrap data\n";
-  std::cout << "  This block verifies the finite recurrence data used by\n"
-               "  Lemma capd_origin_frobenius.  The vortex U,a tails use\n"
+  std::cout << "  This block verifies the finite recurrence data used in\n"
+               "  Lemmas 7.1 and 7.2.  The vortex U,a tails use\n"
                "  the analytic coefficient majorants; the shooting derivative\n"
-               "  tails use Lemma Wbderror.  For psi, Phi_1, Phi_2 this\n"
+               "  tails use Lemma 5.8.  For psi_0, Phi_1, Phi_2 this\n"
                "  block checks finite slices and the closed-form infinite\n"
                "  weighted geometric tail bootstrap.\n";
 
   checkVortexValueMajorantsAtOrigin(S);
-  std::cout << "  U,a analytic coefficient majorants at r0: PASS\n";
+  std::cout << "  U,a analytic coefficient majorants at r_0: PASS\n";
   checkVortexDerivativeMajorantsAtOrigin(S);
-  std::cout << "  partial_c U,a analytic derivative majorants at r0: PASS\n";
+  std::cout << "  partial_c U,a analytic derivative majorants at r_0: PASS\n";
 
   I x = sqr(S.r0);
   int slices = 20;
@@ -1243,7 +1243,7 @@ static bool checkFrobeniusTailBootstrapData(
   I muAbs = upperSingleton(absUpperAsInterval(S.mu_box));
   std::vector<I> psiH = internalModeH(S.c_cert, S.mu_box, S.series_order + 20 + slices);
   InfiniteTailMapRecord psi = checkInternalInfiniteTailSelfMap(
-      "psi", psiH, x, cAbs, muAbs, S.series_order + 20, slices, "0.95");
+      "psi_0", psiH, x, cAbs, muAbs, S.series_order + 20, slices, "0.95");
   printInfiniteTailMapRecord(psi);
 
   I energy = IV("4") * S.mu_box;
@@ -1257,7 +1257,7 @@ static bool checkFrobeniusTailBootstrapData(
   requireTrue(upperLess(psi.totalNorm, "0.358546")
               && upperLess(psi.valueTail, "2.744e-279")
               && upperLess(psi.xDerivativeTail, "3.293e-275"),
-              "psi Frobenius table bounds");
+              "psi_0 Frobenius table bounds");
   requireTrue(upperLess(phi1.totalNorm, "1.417e-6")
               && upperLess(phi1.valueTail, "2.948e-167")
               && upperLess(phi1.xDerivativeTail, "2.358e-163"),
@@ -1460,13 +1460,12 @@ static bool checkVortexOriginStartBoxes(const Settings& S) {
   I paperR0 = IV("0.1");
   I paperJ0 = IV("0.6032878545810", "0.6032878545819");
   requireTrue(containsInterval(S.r0, paperR0),
-              "active r0 contains the exact Lemma lem:I0 radius 0.1");
+              "active r_0 contains the exact radius 0.1 from Lemma 5.4");
   requireTrue(containsInterval(S.c_box, paperJ0),
-              "active c_box contains the exact Lemma lem:I0 interval J0");
+              "active c_box contains the exact interval J_0 from Lemma 5.4");
 
-  std::cout << "\n[0b] Vortex starting boxes at r=0.1 "
-               "(Lemma 4.4, lem:I0)\n";
-  std::cout << "  J0=[0.6032878545810,0.6032878545819]\n"
+  std::cout << "\n[0b] Vortex starting boxes at r_0=0.1 (Lemma 5.4)\n";
+  std::cout << "  J_0=[0.6032878545810,0.6032878545819]\n"
                "  target U box=[0.0602534900425221,0.0602534900426123]\n"
                "  target a box=[0.00249545811721475,0.00249545811721477]\n";
   Vec ordinary = initialVortex(S, S.c_box);
@@ -1487,12 +1486,12 @@ static bool checkVortexOriginStartBoxes(const Settings& S) {
             << ", a=" << ordinary[2] << "\n";
   std::cout << "  variational initializer: U=" << variational[1]
             << ", a=" << variational[2] << "\n";
-  std::cout << "  both initializers lie in the boxes stated in Lemma lem:I0: "
+  std::cout << "  both initializers lie in the boxes stated in Lemma 5.4: "
             << pass(ordinaryOk && variationalOk) << "\n";
   requireTrue(ordinaryOk,
-              "ordinary vortex initializer lies in the Lemma lem:I0 box");
+              "ordinary vortex initializer lies in the Lemma 5.4 box");
   requireTrue(variationalOk,
-              "variational vortex initializer lies in the Lemma lem:I0 box");
+              "variational vortex initializer lies in the Lemma 5.4 box");
   return true;
 }
 
@@ -1546,7 +1545,7 @@ static I K0_gaussian_upper(const I& x) {
   return isqrt(piI() / (two() * x)) * iexp(-x);
 }
 
-// From Lemma lem_1-U2: for the true asymptotic vortex and R>=4,
+// From Lemma 5.7: for the true asymptotic vortex and R>=rho_0=4,
 //   0 <= 1-U(R) <= (4 R^{-1/2}-2 R^{-3/2}+3 R^{-5/2}) exp(-R).
 // This is used to convert the finite-radius Newton root U(R;c_R)=1 into an
 // enclosure of the actual asymptotic shooting parameter c_*.
@@ -1561,7 +1560,7 @@ static I vortexOneMinusUTailBound(const I& R0) {
 // Statement.  For r >= R >= 4, |1-U(r)^2| is bounded by
 //     8 exp(-r)/sqrt(r).
 //
-// Analytic input.  Lemma lem_1-U2 in the paper proves, for r>4,
+// Analytic input.  Lemma 5.7 in the paper proves, for r>rho_0=4,
 //     U(r) > 1 - (4 r^{-1/2}-2 r^{-3/2}+3 r^{-5/2}) exp(-r)
 // and U(r)<1.  Hence
 //     0 <= 1-U(r)^2 <= 2(1-U(r))
@@ -1587,7 +1586,7 @@ static TailPotentialBound proveVortexTailPotentialBound(const Settings& S, const
   I bridgeMargin = R0 - IV("4");
   I algebraMargin = R0 - IV("1.5");
   requireTrue(lowerAtLeast(bridgeMargin, "0"),
-              "vortex tail bridge requires R>=4 from Lemma lem_1-U2");
+              "vortex tail bridge requires R>=rho_0=4 from Lemma 5.7");
   requireTrue(positive(algebraMargin), "vortex tail algebra requires R>3/2");
 
   Vec xv = initialVortex(S, S.c_cert);
@@ -1597,7 +1596,7 @@ static TailPotentialBound proveVortexTailPotentialBound(const Settings& S, const
   I margin = barrier - qR;
   if (verbose) {
     std::cout << "vortex tail lemma at R=" << R0 << "\n";
-    std::cout << "  imported analytic bridge: Lemma lem_1-U2 gives A=8 for all r>=R\n";
+    std::cout << "  imported analytic bridge: Lemma 5.7 gives A=8 for all r>=R\n";
     std::cout << "  R-4 margin = " << bridgeMargin << ", R-3/2 margin = " << algebraMargin << "\n";
     std::cout << "  observed |1-U^2| <= " << qR << "\n";
     std::cout << "  proposed A exp(-R)/sqrt(R) = " << barrier << "\n";
@@ -1625,29 +1624,30 @@ static TailPotentialBound proveVortexTailPotentialBound(const Settings& S, const
 static bool checkVortexTailBarrierAtFour(const Settings& S,
                                          const I& cBox,
                                          const std::string& boxLabel) {
-  std::cout << "\n[Vortex tail-barrier entry inequalities at r=4]\n";
+  std::cout << "\n[Vortex tail-barrier entry inequalities at rho_0=4]\n";
 
-  // This block is the missing finite CAPD ingredient in Lemma lem_1-U2 of the
+  // This block is the finite CAPD ingredient in Lemma 5.7 of the
   // Part I paper.  The analytic comparison argument in the paper says:
   //
-  //   If, at r0=4,
+  //   If, at rho_0=4,
   //      A_lower(4) < a(4) < A_upper(4),
   //      U_lower(4) < U(4) < U_upper(4),
   //   then the explicit lower/upper barriers propagate for every r>4.
   //
   // The code below verifies exactly those four strict inequalities, using the
   // specified shooting box and CAPD propagation from the Frobenius start at
-  // r=0.1 to r=4.  This is not a numerical plot check; the printed margins are
+  // r=r_0=0.1 to r=rho_0=4.  This is not a numerical plot check; the printed
+  // margins are
   // interval margins.  A positive left endpoint means the inequality is proved
   // for every trajectory in the supplied c-box.
   //
   // Dependency discipline:
-  //   * In the shooting block this routine is called with the broad J0 box,
-  //     after Proposition 4.1's endpoint dichotomy has placed the true c_* in
-  //     J0 but before the finite-radius Newton bridge uses Lemma lem_1-U2.
+  //   * In the shooting block this routine is called with the broad J_0 box,
+  //     after Proposition 5.1's endpoint dichotomy has placed the true c_* in
+  //     J_0 but before the finite-radius Newton bridge uses Lemma 5.7.
   //     This breaks the circularity flagged in review.
   //   * Later profile-dependent checks use the refined c_cert only after the
-  //     broad J0 entry check and the Newton bridge have both passed.
+  //     broad J_0 entry check and the Newton bridge have both passed.
   I r = IV("4");
   std::cout << "c-box used for this entry check (" << boxLabel << ") = " << cBox << "\n";
   Vec x0 = initialVortex(S, cBox);
@@ -1671,7 +1671,7 @@ static bool checkVortexTailBarrierAtFour(const Settings& S,
   I marginULower = u - U_lower;
   I marginUUpper = U_upper - u;
 
-  std::cout << "profile enclosure at r=4: U=" << u << ", a=" << a << "\n";
+  std::cout << "profile enclosure at rho_0=4: U=" << u << ", a=" << a << "\n";
   std::cout << "  a(4)-A_lower(4) = " << marginALower << "\n";
   std::cout << "  A_upper(4)-a(4) = " << marginAUpper << "\n";
   std::cout << "  U(4)-U_lower(4) = " << marginULower << "\n";
@@ -1681,7 +1681,7 @@ static bool checkVortexTailBarrierAtFour(const Settings& S,
             positive(marginULower) && positive(marginUUpper);
   if (ok) {
     std::cout << "These four positive margins supply the CAPD entry check\n"
-                 "for Lemma lem_1-U2 at r0=4.\n";
+                 "for Lemma 5.7 at rho_0=4.\n";
   }
   std::cout << pass(ok) << "\n";
   return ok;
@@ -1970,7 +1970,7 @@ static bool certifyAndInstallFgrEigenvalueBox(
 //
 //   (1/k) int_R^infty (|alpha|/s^2+|V(s)|) ds.
 //
-  // This is the r >= 16 analogue of the Frobenius series-tail check: an infinite
+  // This is the r >= R=16 analogue of the Frobenius series-tail check: an infinite
 // tail is reduced to finite coefficient data plus closed-form integral bounds.
 // -----------------------------------------------------------------------------
 
@@ -2111,8 +2111,8 @@ static OutgoingStart outgoingDataAtR(const Settings& S, int which, const I& k) {
   I derErr = (k * zErr + zPrimeErr) / isqrt(k);
 
   // Uniform upper bound for the matrix Weyl functions used in the FGR source
-  // bound.  For r>=R=16, the proof of Lemma lem:capd_outgoing_start (using
-  // Corollary cor:vortex_tail_bridge and integration of a') gives
+  // bound.  For r>=R=16, the proof of Lemma 8.1 (using Corollary 6.1 and
+  // integration of a') gives
   // |1-a(r)| <= (33/8) exp(-r) sqrt(r), hence uniformly
   // |b(r)|=|1-a(r)|/r <= (33/8) exp(-R)/sqrt(R).  Then
   // | -y' - y/(2r) - b y | and |U y| are bounded by the following quantity.
@@ -2125,14 +2125,16 @@ static OutgoingStart outgoingDataAtR(const Settings& S, int which, const I& k) {
   requireTrue(upperLess(matrixTail, "3"), "outgoing matrix Weyl tail bound < 3");
   requireTrue(upperLess(matrixTail, "1.253"), "outgoing matrix Weyl tail bound < 1.253");
 
-  std::cout << "outgoing channel " << which << " residual/Volterra enclosure for r >= 16\n";
+  std::cout << "outgoing channel " << which
+            << " residual/Volterra enclosure for r >= R=16\n";
   std::cout << "  z_N sup on [R,inf] <= " << zSup
             << ", z_N' sup <= " << zPrimeSup << "\n";
   std::cout << "  residual integral <= " << residualIntegral
             << ", potential integral <= " << potentialIntegral << "\n";
   std::cout << "  Volterra contraction = " << contraction << "\n";
   std::cout << "  z error <= " << zErr << ", z' error <= " << zPrimeErr << "\n";
-  std::cout << "  outgoing matrix upper bound for r >= 16 <= " << matrixTail << "\n";
+  std::cout << "  outgoing matrix upper bound for r >= R=16 <= "
+            << matrixTail << "\n";
 
   OutgoingStart out;
   out.y = CI(y.re + symmetricError(valErr), y.im + symmetricError(valErr));
@@ -2163,11 +2165,11 @@ static VortexBadBehaviorCert certifyVortexBadBehaviorAtRadius(
     const I& c,
     bool wantABad,
     const I& radius) {
-  // Proposition 4.1 in the paper is a shooting dichotomy/uniqueness theorem:
+  // Proposition 5.1 in the paper is a shooting dichotomy/uniqueness theorem:
   // the desired vortex parameter c_* is the unique separator between the
   // "a-bad" solutions and the "U-bad" solutions.  The computer should not
   // re-prove that topological ODE theorem here; what it can certify is the
-  // finite-radius hypothesis needed to place the two endpoints of J0 on the
+  // finite-radius hypothesis needed to place the two endpoints of J_0 on the
   // opposite sides of that dichotomy.
   //
   // For the lower endpoint we try to prove a-badness by finding a finite radius
@@ -2187,10 +2189,10 @@ static VortexBadBehaviorCert certifyVortexBadBehaviorAtRadius(
 
 static bool checkVortexBracket(const Settings& S) {
   std::cout << "\n[1] Vortex shooting interval coded lemma\n";
-  std::cout << "J0 = " << S.c_box << "\n";
+  std::cout << "J_0 = " << S.c_box << "\n";
   bool midpointInside = S.c_mid.leftBound() >= S.c_box.leftBound() &&
                         S.c_mid.rightBound() <= S.c_box.rightBound();
-  std::cout << "midpoint value inside J0: " << pass(midpointInside) << "\n";
+  std::cout << "midpoint value inside J_0: " << pass(midpointInside) << "\n";
 
   Vec xl0 = initialVortex(S, S.c_lower);
   Vec xr0 = initialVortex(S, S.c_upper);
@@ -2205,7 +2207,7 @@ static bool checkVortexBracket(const Settings& S) {
       S, S.c_lower, true, IV("27.75"));
   VortexBadBehaviorCert upperBad = certifyVortexBadBehaviorAtRadius(
       S, S.c_upper, false, IV("31.6"));
-  std::cout << "Proposition 4.1 shooting-dichotomy endpoint check\n";
+  std::cout << "Proposition 5.1 shooting-dichotomy endpoint check\n";
   std::cout << "  lower endpoint a-bad certificate: a(r;c_lower)-2 = "
             << lowerBad.margin << " at r=" << lowerBad.radius
             << " -> " << pass(lowerBad.ok) << "\n";
@@ -2222,24 +2224,24 @@ static bool checkVortexBracket(const Settings& S) {
                               "0.00213149536392", "0.00213149536394");
   std::cout << "  propagated radius intervals contain the exact stated radii: "
             << pass(endpointRadiiOk) << "\n";
-  std::cout << "  margins lie in the intervals printed in Proposition prop:J0slope: "
+  std::cout << "  margins lie in the intervals printed in Proposition 5.5: "
             << pass(printedMarginsOk) << "\n";
-  std::cout << "  With Proposition 4.1's analytic dichotomy and uniqueness, these\n"
-               "  opposite finite-radius bad behaviors certify c_* in J0.\n";
+  std::cout << "  With Proposition 5.1's analytic dichotomy and uniqueness, these\n"
+               "  opposite finite-radius bad behaviors certify c_* in J_0.\n";
   bool broadOk = midpointInside && lowerBad.ok && upperBad.ok
               && endpointRadiiOk && printedMarginsOk;
 
-  // This is the key acyclic ordering.  We first know c_* lies in J0 by the
-  // shooting dichotomy.  We then verify the r=4 barrier entry inequalities on
-  // the whole J0 box.  Only after that do we use Lemma lem_1-U2 to convert the
+  // This is the key acyclic ordering.  We first know c_* lies in J_0 by the
+  // shooting dichotomy.  We then verify the rho_0=4 barrier entry inequalities
+  // on the whole J_0 box.  Only after that do we use Lemma 5.7 to convert the
   // finite-radius Newton root U(20;c_R)=1 into a box for the true asymptotic
   // shooting parameter c_*.
   bool broadTailEntryOk = false;
   if (broadOk) {
-    broadTailEntryOk = checkVortexTailBarrierAtFour(S, S.c_box, "broad J0, before Newton bridge");
+    broadTailEntryOk = checkVortexTailBarrierAtFour(S, S.c_box, "broad J_0, before Newton bridge");
   } else {
-    std::cout << "\n[Vortex tail-barrier entry inequalities at r=4]\n"
-                 "Skipped: the broad shooting dichotomy did not yet certify c_* in J0.\n";
+    std::cout << "\n[Vortex tail-barrier entry inequalities at rho_0=4]\n"
+                 "Skipped: the broad shooting dichotomy did not yet certify c_* in J_0.\n";
   }
 
   I cMid = midpointInterval(S.c_cert);
@@ -2274,7 +2276,7 @@ static bool checkVortexBracket(const Settings& S) {
   printWidth("  Newton image", newton);
   std::cout << "  Newton image lies strictly inside the exact printed refined box: "
             << pass(newtonOk) << "\n";
-  std::cout << "  Newton data lie in the intervals printed in Lemma lem:Newton: "
+  std::cout << "  Newton data lie in the intervals printed in Lemma 5.9: "
             << pass(printedNewtonDataOk) << "\n";
 
   Vec xVarBroad0 = initialVortexVar(S, S.c_box);
@@ -2300,14 +2302,14 @@ static bool checkVortexBracket(const Settings& S) {
                        trueCBox, "0.6032878545816699", "0.6032878545816856")
                   && printedBridgeDataOk;
   std::cout << "finite-R/asymptotic shooting bridge\n";
-  std::cout << "  dF/dc on broad J0 = " << dFBroad << "\n";
+  std::cout << "  dF/dc on broad J_0 = " << dFBroad << "\n";
   std::cout << "  true-vortex bound 1-U(R;c_*) <= " << trueVortexTailAtR << "\n";
   std::cout << "  c_* distance from finite-R root <= " << cBridgeRadius << "\n";
   std::cout << "  resulting c_* enclosure = " << trueCBox << "\n";
   printWidth("  resulting c_* enclosure", trueCBox);
   std::cout << "  true asymptotic c_* lies strictly inside the exact printed refined box: "
             << pass(bridgeOk) << "\n";
-  std::cout << "  bridge data satisfy the bounds printed in Lemma lem:Newton: "
+  std::cout << "  bridge data satisfy the bounds printed in Lemma 5.9: "
             << pass(printedBridgeDataOk) << "\n";
 
   Vec xcl0 = initialVortex(S, I(S.c_cert.leftBound()));
@@ -2582,12 +2584,12 @@ static bool checkInternalK0(
   I xTail = kappa * S.r_fgr;
   I k1OverK0Majorant = one() + one() / (two() * xTail);
   I derivativeK0Factor = (one() - S.mu_box) * k1OverK0Majorant / kappa;
-  std::cout << "comparison start radius = " << r8 << "\n";
+  std::cout << "comparison start radius varrho_0 = " << r8 << "\n";
   std::cout << "kappa = " << kappa << "\n";
-  std::cout << "value gap 1.4*K0(kappa*r)-psi(r) = " << valGap << "\n";
-  std::cout << "derivative gap psi'(r)-(1.4*K0)' = " << derivGap << "\n";
+  std::cout << "value gap 1.4*K0(kappa*r)-psi_0(r) = " << valGap << "\n";
+  std::cout << "derivative gap psi_0'(r)-(1.4*K0)' = " << derivGap << "\n";
   std::cout << "U(r)^2-(1-delta0) = " << u2Gap << "\n";
-  std::cout << "large-r derivative factor ((1-mu)/kappa)*(1+1/(2*kappa*16)) = "
+  std::cout << "large-r derivative factor ((1-mu)/kappa)*(1+1/(2*kappa*R)), R=16, = "
             << derivativeK0Factor << "\n";
   std::cout << "  paper target < 0.50359 (hence < 1): "
             << pass(upperLess(derivativeK0Factor, "0.50359")) << "\n";
@@ -2680,7 +2682,7 @@ static I lowerNorm2Sum(const CI& z1, const CI& z2) {
 }
 
 static I fgrOriginComponentBound(const Settings& S, const CI& iOverA1, const CI& iOverA2) {
-  // Numerical checks for the analytic origin estimate in Lemma 7.3.  No ODE
+  // Numerical checks for the analytic origin estimate in Lemma 8.3.  No ODE
   // integration or quadrature is performed on [0,0.1].  The proof uses
   //   U <= r, |U'| <= 1, |psi_0| <= (1-r^2/4)^(-1),
   //   |psi_0'| <= M r/2,
@@ -2731,7 +2733,7 @@ static I fgrOriginComponentBound(const Settings& S, const CI& iOverA1, const CI&
               "FGR inverse-Wronskian bound < 2.506371585");
   requireTrue(upperLess(componentBound, "8.43e-4"),
               "FGR origin integral component bound < 8.43e-4");
-  std::cout << "FGR origin integral component bound on [0,0.1] = "
+  std::cout << "FGR origin integral component bound on [0,r_0]=[0,0.1] = "
             << componentBound << "\n";
   std::cout << "  q-origin bound = " << qM << ", inverse-Wronskian bound = " << invM << "\n";
   return componentBound;
@@ -2764,7 +2766,7 @@ static I fgrSourceConstantCheck(const Settings& S,
       IV("10") * weylTailEnvelope / (lambda * isqrt(piI()));
 
   std::cout << "FGR source constant numerical check\n";
-  std::cout << "  outgoing Weyl upper bound for r >= 16 <= "
+  std::cout << "  outgoing Weyl upper bound for r >= R=16 <= "
             << weylTailEnvelope << "\n";
   std::cout << "  10*upper_bound/(lambda*sqrt(pi)) <= "
             << paperBound << "\n";
@@ -2786,7 +2788,7 @@ static bool checkFGR(
     const PhiFrobeniusTailCertificate& phi2Tail) {
   std::cout << "\n[7] FGR coefficients: compact integral, origin, and tail\n";
   std::cout << "The outgoing start is certified by a residual/Volterra estimate\n"
-               "for r >= 16.  The source constant uses the resulting\n"
+               "for r >= R=16.  The source constant uses the resulting\n"
                "Weyl tail bound, the finite channel count, and the explicit\n"
                "source-polynomial coefficient bound.\n";
   I k = isqrt(IV("4") * S.mu_box - one());
@@ -2896,7 +2898,7 @@ static bool checkFGR(
   requireTrue(upperLess(Ffactor, "1"),
               "c(mu) < 1 on Lambda_FGR");
   requireTrue(upperLess(originNorm2Bound, originBUpper),
-              "Lemma 7.3 origin contribution < B_origin");
+              "Lemma 8.3 origin contribution < B_origin");
 
   auto lowerAfterTail = [&](const I& F) -> I {
     R fl = F.leftBound();
@@ -2912,18 +2914,19 @@ static bool checkFGR(
   I F2low = lowerAfterTail(F2);
   I F12low = lowerAfterTail(F12);
 
-  std::cout << "hat D_1,[0.1,16]^(0) interval = " << F1 << "\n";
-  std::cout << "hat D_2,[0.1,16]^(0) interval = " << F2 << "\n";
-  std::cout << "hat D_12,[0.1,16]^(0) interval = " << F12 << "\n";
-  printWidth("hat D_1,[0.1,16]^(0) interval", F1);
-  printWidth("hat D_2,[0.1,16]^(0) interval", F2);
-  printWidth("hat D_12,[0.1,16]^(0) interval", F12);
+  std::cout << "hat D_1,[r_0,R]^(0) interval, [r_0,R]=[0.1,16], is " << F1 << "\n";
+  std::cout << "hat D_2,[r_0,R]^(0) interval, [r_0,R]=[0.1,16], is " << F2 << "\n";
+  std::cout << "hat D_12,[r_0,R]^(0) interval, [r_0,R]=[0.1,16], is " << F12 << "\n";
+  printWidth("hat D_1,[r_0,R]^(0) interval", F1);
+  printWidth("hat D_2,[r_0,R]^(0) interval", F2);
+  printWidth("hat D_12,[r_0,R]^(0) interval", F12);
   std::cout << "c(mu) = k/(64*mu^2) = " << Ffactor << "\n";
   std::cout << "2*(origin component bound)^2 <= " << originNorm2Bound << "\n";
-  std::cout << "B_origin from Lemma 7.3 used in the final estimate = "
+  std::cout << "B_origin from Lemma 8.3 used in the final estimate = "
             << originB << "\n";
   std::cout << "B_tail = " << tailB << "\n";
-  std::cout << "The vector integrals over (0,0.1), [0.1,16], and (16,infinity)\n"
+  std::cout << "The vector integrals over (0,r_0), [r_0,R], and (R,infinity),\n"
+               "  where r_0=0.1 and R=16,\n"
                "  are combined by the triangle inequality before the\n"
                "  resulting lower bound is squared.\n";
   std::cout << "lower bound for hat D_1^(0) = " << F1low << "\n";
@@ -2987,6 +2990,11 @@ int main() {
               << " bits) is inactive because LPPSSI_USE_MP is not defined\n";
 #endif
     std::cout << "Taylor order = " << S.taylor_order << "\n";
+    std::cout << "paper radius notation: r_0=" << S.r0
+              << ", rho_0=" << S.r_h1_b
+              << ", varrho_0=" << S.r_k0_start
+              << ", r_m=" << S.r_match
+              << ", R=" << S.r_fgr << "\n";
     std::cout << "c box = " << S.c_box << "\n";
     std::cout << "initial nominal mu box = " << S.mu_box << "\n";
     std::cout << "  (not trusted for FGR until block [5b] certifies and installs\n"
@@ -3052,11 +3060,11 @@ int main() {
     });
     std::cout << "\nPrerequisites for FGR are certified in this run:\n"
                  "  refined vortex c_* box, H1 positivity, LT uniqueness,\n"
-                 "  the broad-J0 r=4 entry check for Lemma lem_1-U2,\n"
+                 "  the broad-J_0 rho_0=4 entry check for Lemma 5.7,\n"
                  "  threshold non-resonance, the broad internal eigenvalue\n"
                  "  bracket, the installed FGR eigenvalue sub-bracket, and the\n"
-                 "  K0 comparison, including the psi' bound for r >= 16.\n"
-                 "  The outgoing Weyl bound for r >= 16 and the remaining FGR\n"
+                 "  K0 comparison, including the psi_0' bound for r >= R=16.\n"
+                 "  The outgoing Weyl bound for r >= R=16 and the remaining FGR\n"
                  "  source constant are checked inside the FGR block.\n";
     requireCheck("7 FGR", [&]() {
       return checkFGR(S, fgrPsiTail, fgrPhi1Tail, fgrPhi2Tail);
