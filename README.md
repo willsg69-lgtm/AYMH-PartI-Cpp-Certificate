@@ -8,7 +8,7 @@ Yang-Mills-Higgs model: Spectral Theory and Numerics**
 
 by Jonas Lührmann, José M. Palacios, Fabio Pusateri, Wilhelm Schlag, and
 Sohrab Shahshahani; see
-[arXiv:YYMM.NNNNN](https://arxiv.org/abs/YYMM.NNNNN).
+[arXiv:2608.10608](https://arxiv.org/abs/2608.10608).
 
 The paper studies the spectral theory of the operator obtained by linearizing
 the self-dual abelian Yang--Mills--Higgs equations about the degree-one vortex.
