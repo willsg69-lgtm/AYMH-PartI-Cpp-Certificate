@@ -16,7 +16,7 @@ authors:
     given-names: "Sohrab"
 url: "https://github.com/willsg69-lgtm/AYMH-PartI-Cpp-Certificate"
 repository-code: "https://github.com/willsg69-lgtm/AYMH-PartI-Cpp-Certificate"
-abstract: "CAPD multiprecision interval-arithmetic certificate for the vortex shooting parameter, scalar spectral estimates, internal eigenvalue, threshold nonresonance, and Fermi Golden Rule calc[...]
+abstract: "CAPD multiprecision interval-arithmetic certificate for the vortex shooting parameter, scalar spectral estimates, internal eigenvalue, threshold nonresonance, and Fermi Golden Rule calculation in Part I of the AYMH degree-one vortex stability project."
 keywords:
   - "computer-assisted proof"
   - "interval arithmetic"
