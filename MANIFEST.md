@@ -28,7 +28,7 @@ run script builds the program from the listed source and Makefile.
 ## Paper reference
 
 The paper itself is not included in this repository.  It is available as
-[arXiv:YYMM.NNNNN](https://arxiv.org/abs/YYMM.NNNNN).
+[arXiv:2608.10608](https://arxiv.org/abs/2608.10608).
 
 Timestamped build logs, local transcripts, and the compiled executable are
 created during a local run.  They are intentionally excluded from the release
