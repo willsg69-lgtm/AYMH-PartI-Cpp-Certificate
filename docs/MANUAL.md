@@ -17,7 +17,7 @@ between the paper and the program, and describe how to check a new transcript.
 This repository contains the C++ CAPD interval-arithmetic code supporting the
 computer-assisted estimates in *Asymptotic stability of the degree-one vortex
 in the abelian Yang-Mills-Higgs model: Spectral Theory and Numerics*; see
-[arXiv:YYMM.NNNNN](https://arxiv.org/abs/YYMM.NNNNN).  The code certifies
+[arXiv:2608.10608](https://arxiv.org/abs/2608.10608).  The code certifies
 finite numerical statements after the analytic reductions in the paper have
 been made.  It does not prove the analytic shooting dichotomy, the vortex tail
 lemmas, Setô's eigenvalue bound, or the distorted Fourier theory.  Those
@@ -179,8 +179,7 @@ reference transcript.
 The supported Windows route is Ubuntu under Windows Subsystem for Linux
 (WSL2).  Native Windows compilation has not been used to produce or check the
 reference certificate.  The current prerequisites are given in Microsoft's
-[official WSL installation instructions](https://learn.microsoft.com/windows/wsl/install).
-In an Administrator PowerShell window, run
+[official WSL installation instructions](https://learn.microsoft.com/windows/wsl/install). In an Administrator PowerShell window, run
 
 ```powershell
 wsl --install -d Ubuntu
@@ -491,14 +490,14 @@ hat D_12^(0) > 0.022940050
 These are the quantities formed with $\psi_0(0)=1$ and the factor
 $k_\mu/(64\mu^2)$.  In the notation of Proposition 4.3,
 
-$$
+```
 \begin{aligned}
 \widehat D_\alpha^{(0)}
   &=-\frac{k_\lambda}{4\lambda}D_\alpha^{(0)},\\
 D_\alpha
   &=-\frac{4\lambda}{k_\lambda\nu_\psi^4}\widehat D_\alpha^{(0)}.
 \end{aligned}
-$$
+```
 
 The conversion factor is positive, so these three bounds prove the negativity
 of the physical coefficients $D_1,D_2,D_{12}$.
@@ -580,7 +579,7 @@ and inspect the resulting diff before committing.
 Only the C++ CAPD certificate is part of this repository.  Earlier exploratory
 computations and independent experimental checks are not included and are not
 used as proof inputs.  The paper source is also not included; the paper is
-available as [arXiv:YYMM.NNNNN](https://arxiv.org/abs/YYMM.NNNNN).  The
+available as [arXiv:2608.10608](https://arxiv.org/abs/2608.10608).  The
 repository is limited to the source, transcripts, hashes, and documentation
 needed to reproduce the C++ interval certificate.
 
