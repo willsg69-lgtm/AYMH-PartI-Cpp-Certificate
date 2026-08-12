@@ -179,7 +179,8 @@ reference transcript.
 The supported Windows route is Ubuntu under Windows Subsystem for Linux
 (WSL2).  Native Windows compilation has not been used to produce or check the
 reference certificate.  The current prerequisites are given in Microsoft's
-[official WSL installation instructions](https://learn.microsoft.com/windows/wsl/install). In an Administrator PowerShell window, run
+[official WSL installation instructions](https://learn.microsoft.com/windows/wsl/install).
+In an Administrator PowerShell window, run
 
 ```powershell
 wsl --install -d Ubuntu
@@ -490,14 +491,14 @@ hat D_12^(0) > 0.022940050
 These are the quantities formed with $\psi_0(0)=1$ and the factor
 $k_\mu/(64\mu^2)$.  In the notation of Proposition 4.3,
 
-```
+$$
 \begin{aligned}
 \widehat D_\alpha^{(0)}
   &=-\frac{k_\lambda}{4\lambda}D_\alpha^{(0)},\\
 D_\alpha
   &=-\frac{4\lambda}{k_\lambda\nu_\psi^4}\widehat D_\alpha^{(0)}.
 \end{aligned}
-```
+$$
 
 The conversion factor is positive, so these three bounds prove the negativity
 of the physical coefficients $D_1,D_2,D_{12}$.
